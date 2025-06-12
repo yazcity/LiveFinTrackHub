@@ -185,7 +185,9 @@ app.MapControllers();
 
 // 👇 Important for Render: Bind to the PORT from environment
 
-var port1 = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-builder.WebHost.UseUrls($"http://*:{port1}");
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.UseUrls($"http://*:{port}");
+
 
 app.Run();
