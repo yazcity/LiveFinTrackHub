@@ -17,6 +17,18 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "http://localhost:3000") // add your frontend domains
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
+
 
 
 // Add DbContext
@@ -136,7 +148,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile)); // OR typeof(Program)
 
 var app = builder.Build();
 
-
+app.UseCors("AllowFrontend");
 // Apply database migrations at startup
 using (var scope = app.Services.CreateScope())
 {
