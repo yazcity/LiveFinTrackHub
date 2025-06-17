@@ -217,19 +217,5 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://*:{port}");
 
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins(
-            "http://localhost:3000",            // local dev frontend
-            "https://yazcity.github.io"   // your GitHub Pages frontend URL
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
-});
-
-
 
 app.Run();
