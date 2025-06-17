@@ -8,6 +8,8 @@ using FinTrackHub.Repositories;
 using FinTrackHub.Services;
 using FinTrackHub.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,13 +19,26 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowFrontend", policy =>
+//    {
+//        policy.WithOrigins("http://localhost:3000", "http://localhost:3000") // add your frontend domains
+//              .AllowAnyHeader()
+//              .AllowAnyMethod();
+//    });
+//});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:3000") // add your frontend domains
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://localhost:3000",          // local development frontend
+            "https://yazcity.github.io"       // GitHub Pages frontend URL
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 
@@ -200,6 +215,21 @@ app.MapControllers();
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://*:{port}");
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+            "http://localhost:3000",            // local dev frontend
+            "https://yazcity.github.io"   // your GitHub Pages frontend URL
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
 
 
 app.Run();
