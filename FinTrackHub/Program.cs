@@ -29,19 +29,32 @@ var builder = WebApplication.CreateBuilder(args);
 //    });
 //});
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowFrontend", policy =>
+//    {
+//        policy.WithOrigins(
+//            "https://yazcity.github.io",    // GitHub Pages frontend URL
+//            "http://localhost:3000"         // local development frontend 
+//        )
+//        .AllowAnyHeader()
+//        .AllowAnyMethod()
+//        .AllowCredentials();
+//    });
+//});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-            "https://yazcity.github.io",    // GitHub Pages frontend URL
-            "http://localhost:3000"         // local development frontend 
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
+        policy
+            .SetIsOriginAllowed(origin => true) // 👈 TEMP for testing only
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // not needed for JWT but safe
     });
 });
+
 
 
 // Add DbContext
@@ -162,6 +175,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile)); // OR typeof(Program)
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
+
 // Apply database migrations at startup
 using (var scope = app.Services.CreateScope())
 {

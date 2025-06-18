@@ -4,6 +4,7 @@ using FinTrackHub.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace FinTrackHub.Controllers
 {
@@ -12,38 +13,56 @@ namespace FinTrackHub.Controllers
     public class AuthRegisterController : BaseController
     {
         private readonly AuthService _authService;
-
-        public AuthRegisterController(AuthService authService)
+        private readonly ILogger<AuthRegisterController> _logger;
+        public AuthRegisterController(AuthService authService, ILogger<AuthRegisterController> logger)
         {
             _authService = authService;
+            _logger = logger;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] Register model)
         {
-            if (!ModelState.IsValid)
-                return BadRequestResponse(GetModelErrors());
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequestResponse(GetModelErrors());
 
-            var result = await _authService.RegisterUserAsync(model);
+                var result = await _authService.RegisterUserAsync(model);
 
-            if (!result)
-                return BadRequestResponse("Registration failed!");
+                if (!result)
+                    return BadRequestResponse("Registration failed!");
 
-            return OkResponse<string>(null, "Registration successful!");
+                return OkResponse<string>(null, "Registration successful!");
+            }
+            catch (Exception ex) {
+
+                _logger.LogError(ex, "Login failed due to unexpected error for {Email}", model.Email);
+                return StatusCode(500, "Internal server error.");
+            }
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] Login model)
         {
-            if (!ModelState.IsValid)
-                return BadRequestResponse(GetModelErrors());
+            _logger.LogInformation("Login endpoint hit at {Time}", DateTime.UtcNow);
+            try
+            {
 
-            var token = await _authService.LoginUserAsync(model);
+                if (!ModelState.IsValid)
+                    return BadRequestResponse(GetModelErrors());
 
-            if (token == null)
-                return UnauthorizedResponse("Invalid credentials!");
+                var token = await _authService.LoginUserAsync(model);
 
-            return OkResponse(token, "Login successful!");
+                if (token == null)
+                    return UnauthorizedResponse("Invalid credentials!");
+
+                return OkResponse(token, "Login successful!");
+            }
+            catch (Exception ex) {
+                _logger.LogError(ex, "Login failed due to unexpected error for {Email}", model.Email);
+                return StatusCode(500, "Internal server error.");
+            }
         }
 
         private string GetModelErrors()
