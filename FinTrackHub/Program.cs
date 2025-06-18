@@ -34,16 +34,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
-            "http://localhost:3000",          // local development frontend
-            "https://yazcity.github.io"       // GitHub Pages frontend URL
+            "https://yazcity.github.io",    // GitHub Pages frontend URL
+            "http://localhost:3000"         // local development frontend 
         )
         .AllowAnyHeader()
-        .AllowAnyMethod();
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
-
-
-
 
 
 // Add DbContext
