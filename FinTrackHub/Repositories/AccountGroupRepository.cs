@@ -25,6 +25,7 @@ namespace FinTrackHub.Repositories
                     AccountgroupId = x.AccountgroupId,
                     AccountGroupName = x.AccountGroupName,
                     AccountGroupTypeName = x.AccountGroupType.AccountGroupTypeName,
+                    AccountgroupTypeId  = x.AccountgroupTypeId,
                     IsActive = x.IsActive,
                     CreatedDate = x.CreatedDate,
                     UpdatedDate = x.UpdatedDate
