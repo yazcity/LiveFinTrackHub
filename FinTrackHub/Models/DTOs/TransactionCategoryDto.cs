@@ -11,8 +11,8 @@ namespace FinTrackHub.Models.DTOs
         [Required(ErrorMessage = "Type Name is required.")]
         [StringLength(250, ErrorMessage = "Type Name cannot be longer than 250 characters.")]
         public string CategoryName { get; set; }
-        public string TypeName { get; set; }
-        public DateTime CreatedDate  { get; set; }
-        public DateTime UpdatedDate  { get; set; }
+        public string? TypeName { get; set; }
+        public DateTime? CreatedDate  { get; set; }
+        public DateTime? UpdatedDate  { get; set; }
     }
 }

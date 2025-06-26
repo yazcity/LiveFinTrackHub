@@ -3,6 +3,7 @@ using FinTrackHub.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FinTrackHub.Controllers
 {
@@ -11,7 +12,7 @@ namespace FinTrackHub.Controllers
     public class DropdownController : BaseController
     {
         private readonly IDropdownRepository _dropdownRepository;
-
+        private readonly List<long> categoryType = new List<long> { 3, 5 };
         public DropdownController(IDropdownRepository dropdownRepository)
         {
             _dropdownRepository = dropdownRepository;
@@ -41,6 +42,9 @@ namespace FinTrackHub.Controllers
         public async Task<IActionResult> GetIncomeExpenseTypes()
         {
             var result = await _dropdownRepository.GetIncomeExpenseCategoryTypesAsync();
+            var data = result.Data.Where(x => categoryType.Contains(Convert.ToInt64(x.Value))).ToList();
+            result.Data.Clear();
+            result.Data.AddRange(data);
             return HandleResult(result);
         }
 
