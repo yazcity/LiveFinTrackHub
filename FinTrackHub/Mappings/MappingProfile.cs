@@ -29,6 +29,8 @@ namespace FinTrackHub.Mappings
                 opt => opt.MapFrom(src => src.CreatedByUser != null ? src.CreatedByUser.FullName : string.Empty))
             .ForMember(dest => dest.UpdatedBy,
                 opt => opt.MapFrom(src => src.UpdatedByUser != null ? src.UpdatedByUser.FullName : string.Empty))
+            .ForMember(dest => dest.AccountgroupTypeId,
+               opt => opt.MapFrom(src => src.AccountGroup.AccountgroupTypeId))
             .ReverseMap(); // <-- Add this to allow AccountDto → Account mapping
 
         }
