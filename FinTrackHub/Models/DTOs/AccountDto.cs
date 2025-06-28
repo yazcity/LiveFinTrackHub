@@ -19,6 +19,6 @@
         public string? AccountGroupTypeName { get; set; }
         public string? Attachement { get; set; }
         public bool IsActive { get; set; }
-        public long AccountgroupTypeId { get; set; } // 👈 ADD THIS
+        public long? AccountgroupTypeId { get; set; } // 👈 ADD THIS
     }
 }
