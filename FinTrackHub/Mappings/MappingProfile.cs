@@ -36,6 +36,28 @@ namespace FinTrackHub.Mappings
 
             .ReverseMap(); // <-- Add this to allow AccountDto → Account mapping
 
+
+
+            CreateMap<Transaction, TransactionDto>()
+             .ForMember(dest => dest.EncodedID, opt => opt.MapFrom(src => "100 000 " + src.TransactionId))
+             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.IncomeExpenseCategory.CategoryName))
+             .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.AccountName))
+             .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedByUser.UserName))
+             .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedByUser.UserName))
+             .ReverseMap() // DTO → Entity
+             .ForMember(dest => dest.TransactionId, opt => opt.Ignore()) // Optional: EF generates it
+             .ForMember(dest => dest.IncomeExpenseCategory, opt => opt.Ignore())
+             .ForMember(dest => dest.Account, opt => opt.Ignore())
+             .ForMember(dest => dest.CreatedByUser, opt => opt.Ignore())
+             .ForMember(dest => dest.UpdatedByUser, opt => opt.Ignore())
+             .ForMember(dest => dest.CreatedById, opt => opt.Ignore()) // Set manually in controller
+             .ForMember(dest => dest.UpdatedById, opt => opt.Ignore()) // Set manually in controller
+             .ForMember(dest => dest.CreatedDate, opt => opt.Ignore()) // Optional: set in controller or DB
+             .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore()) // Optional: set in controller
+             .ForMember(dest => dest.IsActive, opt => opt.Ignore()); // Optional: default in entity
+
+
+
         }
 
     }

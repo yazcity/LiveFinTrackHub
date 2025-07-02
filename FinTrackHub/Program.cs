@@ -93,6 +93,7 @@ builder.Services.AddScoped<IAccountGroupService, AccountGroupService>();
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ITransactionCategoryRepository, TransactionCategoryRepository>();
+
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 builder.Services.AddScoped<IDropdownRepository, DropdownRepository>();

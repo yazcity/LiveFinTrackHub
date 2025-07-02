@@ -49,6 +49,7 @@ namespace FinTrackHub.Controllers
             var result = model.AccountId == 0
                 ? await _accountRepo.AddAccountAsync(model)
                 : await _accountRepo.UpdateAccountAsync(model);
+            var test = HandleResult(result);
 
             return HandleResult(result);
         }
