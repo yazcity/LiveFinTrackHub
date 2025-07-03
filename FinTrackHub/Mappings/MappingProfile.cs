@@ -40,12 +40,14 @@ namespace FinTrackHub.Mappings
 
             CreateMap<Transaction, TransactionDto>()
              .ForMember(dest => dest.EncodedID, opt => opt.MapFrom(src => "100 000 " + src.TransactionId))
+             .ForMember(dest => dest.TransactionId, opt => opt.MapFrom(src => src.TransactionId))
              .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.IncomeExpenseCategory.CategoryName))
              .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.AccountName))
              .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedByUser.UserName))
              .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedByUser.UserName))
              .ReverseMap() // DTO → Entity
-             .ForMember(dest => dest.TransactionId, opt => opt.Ignore()) // Optional: EF generates it
+             .ForMember(dest => dest.TransactionId, opt => opt.MapFrom(src => src.TransactionId))
+           //  .ForMember(dest => dest.TransactionId, opt => opt.Ignore()) // Optional: EF generates it
              .ForMember(dest => dest.IncomeExpenseCategory, opt => opt.Ignore())
              .ForMember(dest => dest.Account, opt => opt.Ignore())
              .ForMember(dest => dest.CreatedByUser, opt => opt.Ignore())

@@ -50,7 +50,9 @@ namespace FinTrackHub.Controllers
                     UpdatedBy = x.UpdatedByUser?.UserName,
                     UpdatedDate = x.UpdatedDate,
                     CreatedDate = x.CreatedDate,
-                    Note = x.Note
+                    Note = x.Note,
+                    CategoryId = x.CategoryId ?? 0,
+                    AccountId = x.AccountId ?? 0
                 })
                 .ToList();
 
@@ -95,7 +97,7 @@ namespace FinTrackHub.Controllers
 
                 // If save failed, return errors
                 if (!result.IsSuccess)
-                      return HandleResult(Result<IEnumerable<TransactionDto>>.Failure(result.Message));
+                    return HandleResult(Result<IEnumerable<TransactionDto>>.Failure(result.Message));
 
                 // Map back to DTO and return success response
                 var dto = _mapper.Map<TransactionDto>(result.Data);
@@ -192,5 +194,38 @@ namespace FinTrackHub.Controllers
         {
             return string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
         }
+
+        #region Delete
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            if (_currentUserService.UserId == null)
+            {
+                return BadRequestResponse("Invalid user.");
+            }
+
+            if (id == 0)
+            {
+                return BadRequestResponse("Invalid income ID.");
+            }
+
+            try
+            {
+                // Deactivate related transactions first
+                var transactionResult = await _transactionRepository.DeleteTransactionAsync(id, _currentUserService.UserId);
+                if (!transactionResult.IsSuccess)
+                {
+                    return HandleResult(transactionResult);
+                }
+
+
+                return HandleResult(transactionResult);
+            }
+            catch (Exception ex)
+            {
+                return HandleResult(Result<bool>.Failure(ex.Message));
+            }
+        }
+        #endregion
     }
 }
