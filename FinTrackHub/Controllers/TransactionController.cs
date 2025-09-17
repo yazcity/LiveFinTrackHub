@@ -51,6 +51,7 @@ namespace FinTrackHub.Controllers
                     UpdatedDate = x.UpdatedDate,
                     CreatedDate = x.CreatedDate,
                     Note = x.Note,
+                    Description= x.Description,
                     CategoryId = x.CategoryId ?? 0,
                     AccountId = x.AccountId ?? 0
                 })
